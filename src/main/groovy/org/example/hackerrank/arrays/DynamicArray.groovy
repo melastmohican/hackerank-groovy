@@ -1,3 +1,7 @@
+package org.example.hackerrank.arrays
+
+import org.example.hackerank.HackerRankExecutable
+
 /**
  * Create a list, seqList , of N empty sequences, where each sequence is indexed from 0 to N-1. The elements within each of the N  sequences also use 0-indexing.
  Create an integer, lastAnswer, and initialize it to 0.
@@ -27,8 +31,8 @@
 
  It is guaranteed that query type 2 will never query an empty sequence or index.
  */
-class DynamicArray {
-    static def execute() {
+class DynamicArray implements HackerRankExecutable {
+    def execute() {
         int n
         int q
         int lastAnswer = 0

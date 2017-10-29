@@ -1,3 +1,7 @@
+package org.example.hackerrank.arrays
+
+import org.example.hackerank.HackerRankExecutable
+
 /**
  * Given a 6 x 6 2D Array, A:
 
@@ -30,8 +34,8 @@
 
  Print the largest (maximum) hourglass sum found in .
  */
-class Array2DDS {
-    static def execute() {
+class Array2DDS implements HackerRankExecutable {
+    def execute() {
         def input = [] as int[][]
         System.in.withReader { console ->
             def line = console.readLine()
