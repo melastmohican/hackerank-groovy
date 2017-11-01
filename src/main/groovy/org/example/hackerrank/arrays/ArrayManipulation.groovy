@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 /**
  * You are given a list(1-indexed) of size n, initialized with zeroes. You have to perform m operations on the list and output the maximum of final values of all the n elements in the list.
@@ -23,7 +23,7 @@ import org.example.hackerank.HackerRankExecutable
 
  Output Format
 
- Print in a single line the maximum value in the updated list.
+ print in a single line the maximum value in the updated list.
  */
 class ArrayManipulation implements HackerRankExecutable {
     @Override

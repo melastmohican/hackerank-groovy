@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 class ArraysDS implements HackerRankExecutable {
     def execute() {

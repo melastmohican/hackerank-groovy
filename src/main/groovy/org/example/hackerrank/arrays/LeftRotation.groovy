@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 /**
  * A left rotation operation on an array of size  shifts each of the array's elements 1 unit to the left. For example, if 2 left rotations are performed on array [1,2,3,4,5],
@@ -21,7 +21,7 @@ import org.example.hackerank.HackerRankExecutable
  *
  * Output Format
  *
- * Print a single line of n space-separated integers denoting the final state of the array after performing d left rotations.
+ * print a single line of n space-separated integers denoting the final state of the array after performing d left rotations.
  */
 class LeftRotation implements HackerRankExecutable {
     @Override

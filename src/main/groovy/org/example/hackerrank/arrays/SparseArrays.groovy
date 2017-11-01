@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 /**
  * There is a collection of N strings ( There can be multiple occurences of a particular string ). Each string's length is no more than 20 characters. There are also Q queries.

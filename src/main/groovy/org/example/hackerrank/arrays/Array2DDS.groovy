@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 /**
  * Given a 6 x 6 2D Array, A:
@@ -32,7 +32,7 @@ import org.example.hackerank.HackerRankExecutable
 
  Output Format
 
- Print the largest (maximum) hourglass sum found in .
+ print the largest (maximum) hourglass sum found in .
  */
 class Array2DDS implements HackerRankExecutable {
     def execute() {

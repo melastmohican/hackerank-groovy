@@ -1,7 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankTest
-import spock.lang.Specification
+import org.example.hackerrank.HackerRankTest
 
 class LeftRotationTest extends HackerRankTest {
 

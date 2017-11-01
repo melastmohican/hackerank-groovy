@@ -1,4 +1,4 @@
-package org.example.hackerank
+package org.example.hackerrank
 
 
 interface HackerRankExecutable {

@@ -1,6 +1,6 @@
 package org.example.hackerrank.arrays
 
-import org.example.hackerank.HackerRankExecutable
+import org.example.hackerrank.HackerRankExecutable
 
 /**
  * Create a list, seqList , of N empty sequences, where each sequence is indexed from 0 to N-1. The elements within each of the N  sequences also use 0-indexing.
@@ -12,7 +12,7 @@ import org.example.hackerank.HackerRankExecutable
  Query: 2 x y
  Find the sequence, seq, at index ((x XOR lastAnswer) % N) in seqList.
  Find the value of element y % size in seq (where size is the size of seq) and assign it to LastAnswer.
- Print the new value of lastNswer on a new line
+ print the new value of lastNswer on a new line
 
  Task
  Given N, Q, and Q queries, execute each query.

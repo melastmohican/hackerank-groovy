@@ -1,7 +1,6 @@
-package org.example.hackerank
+package org.example.hackerrank
 
-import org.example.hackerrank.arrays.Array2DDS
-import spock.lang.Shared
+import org.example.hackerrank.HackerRankExecutable
 import spock.lang.Specification
 
 
@@ -13,6 +12,11 @@ abstract class HackerRankTest extends Specification {
     public initStreams(String input) {
         is = new ByteArrayInputStream(input.getBytes())
         System.setIn(is)
+        out = new ByteArrayOutputStream()
+        System.setOut(new PrintStream(out))
+    }
+
+    public initOut() {
         out = new ByteArrayOutputStream()
         System.setOut(new PrintStream(out))
     }
