@@ -1,8 +1,6 @@
 package org.example.hackerrank.linkedlists
 
 import org.example.hackerrank.HackerRankTest
-import spock.lang.Specification
-
 
 class InsertTailNodeTest extends HackerRankTest {
     def "test insert(NULL)"() {
