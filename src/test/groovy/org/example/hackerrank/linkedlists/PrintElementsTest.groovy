@@ -13,7 +13,7 @@ class PrintElementsTest extends HackerRankTest {
         PrintElements pe = new PrintElements()
 
         when:
-        pe.print(node)
+        pe.printList(node)
 
         then:
         checkResult ""
@@ -26,7 +26,7 @@ class PrintElementsTest extends HackerRankTest {
         PrintElements pe = new PrintElements()
 
         when:
-        pe.print(node)
+        pe.printList(node)
 
         then:
         checkResult "1\n" +

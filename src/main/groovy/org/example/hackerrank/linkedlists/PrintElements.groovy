@@ -31,7 +31,7 @@ package org.example.hackerrank.linkedlists
  3
  */
 class PrintElements {
-    def print(Node head) {
+    def printList(Node head) {
         while(head) {
             println head.data
             head = head.next
