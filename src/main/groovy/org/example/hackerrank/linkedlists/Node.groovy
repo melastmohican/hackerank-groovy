@@ -5,6 +5,14 @@ class Node {
     int data;
     Node next;
 
+    public Node() {
+        this(0)
+    }
+
+    public Node(int data) {
+        this.data = data
+    }
+
     static def fromArray(int[] a) {
         Node head = new Node()
         Node node = head
@@ -20,11 +28,13 @@ class Node {
     static def toArray(Node head) {
         def result = []
         Node node = head
-        while (node.next) {
+        if(node) {
+            while (node.next) {
+                result += node.data
+                node = node.next
+            }
             result += node.data
-            node = node.next
         }
-        result += node.data
         result
     }
 }

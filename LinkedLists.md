@@ -99,8 +99,10 @@ NULL, data = 3, position = 0
 
 ```
 **Sample Output**
-
-
+```
+3 --> NULL
+4 --> 3 --> NULL
+```
 
 ## Delete a Node
 

@@ -19,8 +19,7 @@ package org.example.hackerrank.linkedlists
  */
 class InsertTailNode {
     def insert(Node head, int data) {
-        Node node = new Node()
-        node.data = data
+        Node node = new Node(data)
         Node current = head
         if (!head) {
             return node
