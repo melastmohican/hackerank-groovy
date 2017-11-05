@@ -13,6 +13,15 @@ class Node {
         this.data = data
     }
 
+    static Node getAt(Node head, int position) {
+        if (!head) return -1
+        Node node = head
+        while (position--) {
+            node = node.next
+        }
+        return node
+    }
+
     static def fromArray(int[] a) {
         Node head = new Node()
         Node node = head
@@ -28,7 +37,7 @@ class Node {
     static def toArray(Node head) {
         def result = []
         Node node = head
-        if(node) {
+        if (node) {
             while (node.next) {
                 result += node.data
                 node = node.next
