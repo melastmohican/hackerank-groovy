@@ -8,6 +8,16 @@ class Node {
     Node left
     Node right
 
+    def Node() {
+        this(0)
+    }
+
+    def Node(int data) {
+        this.data = data
+        this.left = null
+        this.right = null
+    }
+
     private static Node createNode(int[] a, int i) {
         if (i < a.length && a[i] > 0) {
             Node node = new Node()
@@ -60,6 +70,14 @@ class Node {
         def idx = (2 * i) + 2
         a[idx] = v
         idx
+    }
+
+    static int height(Node root) {
+        if (!root) {
+            return -1
+        } else {
+            return 1 + Math.max(height(root.left), height(root.right))
+        }
     }
 
 }
