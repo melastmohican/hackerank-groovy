@@ -34,8 +34,6 @@ class Node {
             a[i] = node.data
             makeArray(node.getLeft(), 2 * i + 1, a)
             makeArray(node.getRight(), 2 * i + 2, a)
-        } else {
-            a[i] = -1
         }
     }
 
