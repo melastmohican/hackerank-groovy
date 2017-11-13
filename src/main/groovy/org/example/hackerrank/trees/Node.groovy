@@ -80,4 +80,33 @@ class Node {
         }
     }
 
+    static def fromArrayToBST(int[] a) {
+        if (a.length == 0) return null
+        sortedArrayToBST(a, 0, a.length - 1);
+    }
+
+    private static Node sortedArrayToBST(int[] a, int start, int end) {
+        if (start > end) return null
+
+        int mid = (start + end) / 2
+        Node root = new Node(a[mid])
+        root.left = sortedArrayToBST(a, start, mid - 1)
+        root.right = sortedArrayToBST(a, mid + 1, end)
+        root
+    }
+
+    static def bstToSortedArray(Node root) {
+        def result = []
+        inOrder(root,result)
+        result as int[]
+    }
+
+    static def inOrder(Node root, result) {
+        if(root) {
+            inOrder(root.left, result)
+            result <<  root.data
+            inOrder(root.right,result)
+        }
+    }
+
 }
