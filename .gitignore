@@ -4,3 +4,7 @@ build
 hackerank-groovy.iml
 hackerrank-groovy.iml
 out
+bin
+.settings
+.classpath
+.project
