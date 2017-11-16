@@ -55,91 +55,88 @@ import org.example.hackerrank.HackerRankExecutable
  */
 class KittysCalculations implements HackerRankExecutable {
 
+    static final int MOD_VALUE = 10**9 + 7
+
     static class Node {
-        List<Node> children = []
         int data
-        int level
-        Node parent
+        Set<Node> connections = []
 
-        static Node find(Node root, int value) {
-            if (!root) return root
-            if (root.data == value) return root
-
-            Node result = null
-            for (Node child : root.children) {
-                if (child.data == value) {
-                    return child
-                } else {
-                    result = find(child, value)
-                    if (result) return result
-                }
-            }
-            return result;
+        def Node(int data) {
+            this.data = data
         }
-
-        static int dist(Node a, Node b) {
-            Node c = ancestor(a, b)
-            return a.level + b.level - 2 * c.level
-         }
-
-        static Node ancestor(Node a, Node b) {
-            if (!a) return b
-            else if (!b) return a
-
-            Node trava = a
-            Node travb = b
-
-            while (trava.parent || travb.parent) {
-                if (trava.level == travb.level) {
-                    if (trava.parent == travb.parent)
-                        return trava.parent
-                    trava = trava.parent
-                    travb = travb.parent
-                } else if (trava.level > travb.level) {
-                    if (trava.parent == travb) return travb
-                    trava = trava.parent;
-                } else if (trava.level < travb.level) {
-                    if (trava == travb.parent) return trava
-                    travb = travb.parent;
-                }
-            }
-            if (trava)
-                return trava
-            else
-                return travb
-        }
-
     }
 
-    Node read(Scanner sc, int n) {
-        Node root = new Node()
-        root.data = 1
-        root.level = 0
-        root.parent = null
 
+    Node[] read(Scanner sc, int n) {
+        Node[] nodes = new Node[n]
         (1..<n).each {
             int a = sc.nextInt()
             int b = sc.nextInt()
-            Node nodeB = new Node()
-            nodeB.data = b
-            Node nodeA = Node.find(root, a)
-            if (nodeA) {
-                nodeA.children << nodeB
-                nodeB.parent = nodeA
-                nodeB.level = nodeA.level + 1
+            if (nodes[a - 1] == null) {
+                nodes[a - 1] = new Node(a)
             }
+            if (nodes[b - 1] == null) {
+                nodes[b - 1] = new Node(b);
+            }
+            nodes[a - 1].connections << nodes[b - 1]
+            nodes[b - 1].connections << nodes[a - 1]
         }
-        root
+        nodes
     }
 
-    int calc(int[] arr, Node root) {
-        int sum = 0
-        for (int i = 0; i < arr.length; i++) {
-            for (int j = i + 1; j < arr.length; j++) {
-                sum += arr[i] * arr[j] * Node.dist(Node.find(root,arr[i]), Node.find(root, arr[j]))
+    int distance(Node comingFrom, Node node, int num) {
+        if (node.data == num) return 0
+
+        boolean isFound = false
+        int dist = 0
+        for (Node nextNode : node.connections) {
+            if (!nextNode.equals(comingFrom)) {
+                int temp = distance(node, nextNode, num)
+                if (temp != -1) {
+                    dist = temp + 1
+                    isFound = true
+                }
             }
         }
-        sum % (10**9 + 7)
+        return isFound ? dist : -1;
+    }
+
+    def getPairs(int[] numArr) {
+        def pairGroup = [] as List
+        for (int i = 0; i < numArr.length; i++) {
+            for (int j = i + 1; j < numArr.length; j++) {
+                int[] group = [numArr[i], numArr[j]]
+                pairGroup <<  group
+            }
+        }
+        pairGroup
+    }
+
+    def distCache = [:]
+
+    long calculate(Node[] nodes, int[] inputPair) {
+        int u = inputPair[0]
+        int v = inputPair[1]
+        Long dist = distCache[inputPair]
+        if(!dist) {
+            dist = (long) (u * v * distance(null, nodes[u - 1], v))
+            distCache << [(inputPair) : dist]
+        }
+        dist
+    }
+
+    int calc(int[] arr, Node[] nodes) {
+        int sum = 0
+        if (arr.length >= 2) {
+
+            def pairs = getPairs(arr)
+            def results = []
+            pairs.each { int[] pair ->
+                results << calculate(nodes, pair)
+            }
+            sum = results.sum() % MOD_VALUE
+        }
+        sum
     }
 
     @Override
@@ -147,14 +144,14 @@ class KittysCalculations implements HackerRankExecutable {
         new Scanner(System.in).withCloseable { sc ->
             int n = sc.nextInt();
             int q = sc.nextInt();
-            Node root = read(sc, n)
+            Node[] nodes = read(sc, n)
             (1..q).each {
                 def a = []
                 int k = sc.nextInt()
                 (1..k).each {
                     a << sc.nextInt()
                 }
-                println(calc(a as int[], root))
+                println(calc(a as int[], nodes))
             }
         }
     }

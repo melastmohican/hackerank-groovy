@@ -1,6 +1,7 @@
 package org.example.hackerrank.trees
 
 import org.example.hackerrank.HackerRankTest
+import spock.lang.Ignore
 
 class KittysCalculationsTest extends HackerRankTest {
     def "test execute"() {
@@ -18,6 +19,20 @@ class KittysCalculationsTest extends HackerRankTest {
                 "5\n" +
                 "3\n" +
                 "2 4 5"
+        exec = new KittysCalculations()
+
+        when:
+        exec.execute()
+        then:
+        checkResult "16\n" +
+                "0\n" +
+                "106"
+    }
+
+    @Ignore
+    def "test execute-input01"() {
+        given:
+        initFileStreams( "kittyscalculations/input01.txt" ,"result01.txt")
         exec = new KittysCalculations()
 
         when:
