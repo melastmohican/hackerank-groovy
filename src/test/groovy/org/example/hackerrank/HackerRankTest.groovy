@@ -33,4 +33,11 @@ abstract class HackerRankTest extends Specification {
         def result = out.toString().trim()
         result == expected
     }
+
+    public boolean checkFileResult(String expected) {
+        String file = HackerRankTest.class.getClassLoader().getResource(expected).getFile()
+        InputStream eis = new FileInputStream(file)
+        def result = out.toString().trim()
+        result == eis.toString().trim()
+    }
 }

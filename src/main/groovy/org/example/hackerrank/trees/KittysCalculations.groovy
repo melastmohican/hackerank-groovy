@@ -117,10 +117,11 @@ class KittysCalculations implements HackerRankExecutable {
     long calculate(Node[] nodes, int[] inputPair) {
         int u = inputPair[0]
         int v = inputPair[1]
-        Long dist = distCache[inputPair]
+        def key = "${u}:${v}"
+        Long dist = distCache[key]
         if(!dist) {
             dist = (long) (u * v * distance(null, nodes[u - 1], v))
-            distCache << [(inputPair) : dist]
+            distCache << [ (key) : dist]
         }
         dist
     }

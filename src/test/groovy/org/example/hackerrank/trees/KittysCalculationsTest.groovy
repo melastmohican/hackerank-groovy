@@ -38,8 +38,6 @@ class KittysCalculationsTest extends HackerRankTest {
         when:
         exec.execute()
         then:
-        checkResult "16\n" +
-                "0\n" +
-                "106"
+        checkFileResult "kittyscalculations/output01.txt"
     }
 }
