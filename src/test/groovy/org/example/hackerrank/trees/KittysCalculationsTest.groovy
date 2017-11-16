@@ -29,15 +29,36 @@ class KittysCalculationsTest extends HackerRankTest {
                 "106"
     }
 
-    @Ignore
     def "test execute-input01"() {
         given:
-        initFileStreams( "kittyscalculations/input01.txt" ,"result01.txt")
+        initFileStreams "kittyscalculations/input01.txt"
         exec = new KittysCalculations()
 
         when:
         exec.execute()
         then:
         checkFileResult "kittyscalculations/output01.txt"
+    }
+
+    def "test execute-input02"() {
+        given:
+        initFileStreams "kittyscalculations/input02.txt"
+        exec = new KittysCalculations()
+
+        when:
+        exec.execute()
+        then:
+        checkFileResult "kittyscalculations/output02.txt"
+    }
+
+    def "test execute-input03"() {
+        given:
+        initFileStreams "kittyscalculations/input03.txt"
+        exec = new KittysCalculations()
+
+        when:
+        exec.execute()
+        then:
+        checkFileResult "kittyscalculations/output03.txt"
     }
 }

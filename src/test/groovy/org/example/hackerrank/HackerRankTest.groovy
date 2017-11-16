@@ -16,11 +16,11 @@ abstract class HackerRankTest extends Specification {
         System.setOut(new PrintStream(out))
     }
 
-    public initFileStreams(String input, String result) {
+    public initFileStreams(String input) {
         String file = HackerRankTest.class.getClassLoader().getResource(input).getFile()
         is = new FileInputStream(file)
         System.setIn(is)
-        out = new FileOutputStream(result)
+        out = new ByteArrayOutputStream()
         System.setOut(new PrintStream(out))
     }
 
@@ -37,7 +37,10 @@ abstract class HackerRankTest extends Specification {
     public boolean checkFileResult(String expected) {
         String file = HackerRankTest.class.getClassLoader().getResource(expected).getFile()
         InputStream eis = new FileInputStream(file)
+        Scanner s = new Scanner(eis).useDelimiter("\\A")
+        String expectedResult =  s.hasNext() ? s.next() : "";
+
         def result = out.toString().trim()
-        result == eis.toString().trim()
+        result == expectedResult
     }
 }
