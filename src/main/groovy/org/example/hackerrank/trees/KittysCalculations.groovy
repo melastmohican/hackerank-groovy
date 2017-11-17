@@ -64,12 +64,12 @@ class KittysCalculations implements HackerRankExecutable {
     int[] vis = new int[maxn]
     int[] sz = new int[maxn]
     int[] L = new int[maxn]
-    int[] inx = new int[maxn]
+    int[] inp = new int[maxn]
     int[] out = new int[maxn]
     boolean[] check = new boolean[maxn]
 
-    def createATuple = { new Tuple2<Integer, Integer>(0,0) }
-    List<Tuple2<Integer, Integer>> g = ([ createATuple ] * maxn)*.call()
+    def createTupleList = { new LinkedList<Tuple2<Integer, Integer>>() }
+    List<Tuple2<Integer, Integer>>[] g = ([createTupleList] * maxn)*.call()
 
     long[][] dp = new long[2][maxn]
     long[] lev = new long[maxn]
@@ -108,7 +108,7 @@ class KittysCalculations implements HackerRankExecutable {
         }
 
         Q << 1
-        inx[1] = 1
+        inp[1] = 1
         vis[1] = 1
         while (Q) {
             int u = Q.poll()
@@ -117,7 +117,7 @@ class KittysCalculations implements HackerRankExecutable {
             for (Integer it : adj[u]) {
                 if (!vis[it]) {
                     vis[it] = 1
-                    inx[it] = s + inx[u] + 1;
+                    inp[it] = s + inp[u] + 1;
                     s += sz[it];
                     Q << it
                 }
@@ -127,7 +127,7 @@ class KittysCalculations implements HackerRankExecutable {
         while (S) {
             int u = S.pop()
             vis[u] = 0
-            out[u] = inx[u]
+            out[u] = inp[u]
             for (Integer it : adj[u]) {
                 if (!vis[it]) {
                     out[u] = Math.max(out[u], out[it])
@@ -148,13 +148,9 @@ class KittysCalculations implements HackerRankExecutable {
         }
     }
 
-    def swap(int x, int y) {
-        x += (y - (y = x))
-    }
-
     int getLca(int x, int y) {
         if (L[x] < L[y])
-            swap(x, y);
+            (x, y) = [y, x]
         for (int i = lg; i >= 0; i--) {
             if (LCA[x][i] != 0 && L[LCA[x][i]] >= L[y])
                 x = LCA[x][i];
@@ -162,15 +158,16 @@ class KittysCalculations implements HackerRankExecutable {
         if (x == y)
             return x
         for (int i = lg; i >= 0; i--) {
-            if (LCA[x][i] != 0 && LCA[x][i] != LCA[y][i])
+            if (LCA[x][i] != 0 && LCA[x][i] != LCA[y][i]) {
                 x = LCA[x][i]
-            y = LCA[y][i]
+                y = LCA[y][i]
+            }
         }
         return LCA[x][0]
     }
 
     boolean anc(int p, int u) {
-        return inx[p] <= inx[u] && out[p] >= out[u];
+        return inp[p] <= inp[u] && out[p] >= out[u];
     }
 
     def solve(int u) {
@@ -181,20 +178,20 @@ class KittysCalculations implements HackerRankExecutable {
         lev[u] = 0
         Stack<Integer> S = [] as Stack
         while (Q) {
-            u = Q.poll
+            u = Q.poll()
             S << u
             for (Tuple2<Integer, Integer> it : g[u]) {
-                if (!vis[it.ft]) {
-                    vis[it.ft] = 1;
-                    lev[it.ft] = lev[u] + it.sd;
-                    Q.push(it.ft);
+                if (!vis[it.first]) {
+                    vis[it.first] = 1
+                    lev[it.first] = lev[u] + it.second
+                    Q << it.first
                 }
             }
         }
 
-        while (!S.empty()) {
-            u = S.top(); S.pop();
-            vis[u] = 0;
+        while (S) {
+            u = S.pop()
+            vis[u] = 0
             dp[0][u] = check[u] ? u : 0;
             dp[1][u] = check[u] ? 1L * lev[u] * u : 0
             dp[1][u] %= MOD_VALUE
@@ -211,7 +208,7 @@ class KittysCalculations implements HackerRankExecutable {
             }
             // ok
             for (Tuple2<Integer, Integer> it : g[u]) {
-                if (!vis[it.ft]) {
+                if (!vis[it.first]) {
                     ans += 1L * (dp[1][it.first] - 1L * dp[0][it.first] * lev[u] % MOD_VALUE) * (s - dp[0][it.first]) % MOD_VALUE
                     if (ans >= MOD_VALUE) ans -= MOD_VALUE
                     if (ans < 0) ans += MOD_VALUE;
@@ -229,7 +226,7 @@ class KittysCalculations implements HackerRankExecutable {
         new Scanner(System.in).withCloseable { sc ->
             int n = sc.nextInt();
             int q = sc.nextInt();
-            for (int i = 1; i < n - 1; i++) {
+            for (int i = 1; i <= n - 1; i++) {
                 int u = sc.nextInt()
                 int v = sc.nextInt()
                 adj[u] << v
@@ -240,41 +237,44 @@ class KittysCalculations implements HackerRankExecutable {
             int cnt = 0;
             while (q--) {
                 int k = sc.nextInt()
-                List<Tuple2<Integer, Integer>> Q = [] as List
+                List<Tuple2<Integer, Integer>> Q = [] as Queue
                 Set<Integer> K = [] as Set
                 for (int i = 1; i <= k; i++) {
                     int x = sc.nextInt()
                     check[x] = true
                     if (!K.find { it == x }) {
                         K << x
-                        Q << (new Tuple2<Integer, Integer>(inx[x], x));
+                        Q << new Tuple2<Integer, Integer>(inp[x], x)
                     }
                 }
                 k = Q.size();
-                Q.sort();
+                Q.sort(new OrderBy([{ it.first }, { it.second }]))
                 for (int i = 0; i <= k - 2; i++) {
-                    int lca = getLca(Q[i].first, Q[i + 1].second)
+                    int lca = getLca(Q[i].second, Q[i + 1].second)
                     if (!K.find { it == lca }) {
                         K << lca
-                        Q << (new Tuple2<Integer, Integer>(inx[lca], lca));
+                        Q << new Tuple2<Integer, Integer>(inp[lca], lca)
                     }
                 }
-                Q.sort()
+                Q.sort(new OrderBy([{ it.first }, { it.second }]))
                 Stack<Integer> s = [] as Stack
                 s << Q[0].second
                 for (int i = 1; i < Q.size(); i++) {
                     while (!anc(s.peek(), Q[i].second)) {
                         s.pop()
                     }
-                    g[s.peek()] << [Q[i].second, L[Q[i].second] - L[s.peek()]] as Tuple2
-                    g[Q[i].second] << [s.peek(), L[Q[i].second] - L[s.peek()]] as Tuple2
+                    def t1 = [Q[i].second, L[Q[i].second] - L[s.peek()]] as Tuple2
+                    g[s.peek()] << t1
+                    def t2 = [s.peek(), L[Q[i].second] - L[s.peek()]] as Tuple2
+                    g[Q[i].second] << t2
                     s << Q[i].second
                 }
                 long ans = solve(Q[0].second)
                 println ans
                 for (Tuple2<Integer, Integer> it : Q) {
                     g[it.second].clear()
-                    dp[0][it.second] = dp[1][it.second] = lev[it.second] = check[it.second] = 0
+                    dp[0][it.second] = dp[1][it.second] = lev[it.second] = 0
+                    check[it.second] = false
                 }
 
             }

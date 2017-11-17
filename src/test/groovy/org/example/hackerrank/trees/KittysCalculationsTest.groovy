@@ -4,7 +4,7 @@ import org.example.hackerrank.HackerRankTest
 import spock.lang.Ignore
 
 class KittysCalculationsTest extends HackerRankTest {
-    @Ignore
+
     def "test execute"() {
         given:
         initStreams "7 3\n" +
@@ -30,7 +30,6 @@ class KittysCalculationsTest extends HackerRankTest {
                 "106"
     }
 
-    @Ignore
     def "test execute-input01"() {
         given:
         initFileStreams "kittyscalculations/input01.txt"
@@ -42,7 +41,6 @@ class KittysCalculationsTest extends HackerRankTest {
         checkFileResult "kittyscalculations/output01.txt"
     }
 
-    @Ignore
     def "test execute-input02"() {
         given:
         initFileStreams "kittyscalculations/input02.txt"
@@ -54,7 +52,6 @@ class KittysCalculationsTest extends HackerRankTest {
         checkFileResult "kittyscalculations/output02.txt"
     }
 
-    @Ignore
     def "test execute-input03"() {
         given:
         initFileStreams "kittyscalculations/input03.txt"
