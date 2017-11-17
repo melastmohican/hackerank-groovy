@@ -56,88 +56,172 @@ import org.example.hackerrank.HackerRankExecutable
 class KittysCalculations implements HackerRankExecutable {
 
     static final int MOD_VALUE = 10**9 + 7
+    static final int maxn = 5 * 1e5 + 5
 
-    static class Node {
-        int data
-        Set<Node> connections = []
+    def createAdjSet = { new HashSet<Integer>() }
+    Set<Integer>[] adj = ([createAdjSet] * maxn)*.call()
+    int[][] LCA = new int[maxn][22]
+    int[] vis = new int[maxn]
+    int[] sz = new int[maxn]
+    int[] L = new int[maxn]
+    int[] inx = new int[maxn]
+    int[] out = new int[maxn]
+    boolean[] check = new boolean[maxn]
 
-        def Node(int data) {
-            this.data = data
-        }
-    }
+    def createATuple = { new Tuple2<Integer, Integer>(0,0) }
+    List<Tuple2<Integer, Integer>> g = ([ createATuple ] * maxn)*.call()
+
+    long[][] dp = new long[2][maxn]
+    long[] lev = new long[maxn]
+
+    int lg
+
+    def log2(n) { Math.log(n) / Math.log(2) }
 
 
-    Node[] read(Scanner sc, int n) {
-        Node[] nodes = new Node[n]
-        (1..<n).each {
-            int a = sc.nextInt()
-            int b = sc.nextInt()
-            if (nodes[a - 1] == null) {
-                nodes[a - 1] = new Node(a)
-            }
-            if (nodes[b - 1] == null) {
-                nodes[b - 1] = new Node(b);
-            }
-            nodes[a - 1].connections << nodes[b - 1]
-            nodes[b - 1].connections << nodes[a - 1]
-        }
-        nodes
-    }
-
-    int distance(Node comingFrom, Node node, int num) {
-        if (node.data == num) return 0
-
-        boolean isFound = false
-        int dist = 0
-        for (Node nextNode : node.connections) {
-            if (!nextNode.equals(comingFrom)) {
-                int temp = distance(node, nextNode, num)
-                if (temp != -1) {
-                    dist = temp + 1
-                    isFound = true
+    def dfs() {
+        Queue<Integer> Q = [] as Queue
+        Q << 1
+        vis[1] = 1;
+        Stack<Integer> S = [] as Set
+        while (Q) {
+            int u = Q.poll()
+            sz[u] = 1
+            S.push(u)
+            for (Integer it : adj[u]) {
+                if (!vis[it]) {
+                    vis[it] = 1
+                    L[it] = L[u] + 1
+                    LCA[it][0] = u
+                    Q << it
                 }
             }
         }
-        return isFound ? dist : -1;
-    }
 
-    def getPairs(int[] numArr) {
-        def pairGroup = [] as List
-        for (int i = 0; i < numArr.length; i++) {
-            for (int j = i + 1; j < numArr.length; j++) {
-                int[] group = [numArr[i], numArr[j]]
-                pairGroup <<  group
+        while (S) {
+            int u = S.pop()
+            vis[u] = 0
+            for (Integer it : adj[u]) {
+                if (!vis[it])
+                    sz[u] += sz[it]
             }
         }
-        pairGroup
-    }
 
-    def distCache = [:]
-
-    long calculate(Node[] nodes, int[] inputPair) {
-        int u = inputPair[0]
-        int v = inputPair[1]
-        def key = "${u}:${v}"
-        Long dist = distCache[key]
-        if(!dist) {
-            dist = (long) (u * v * distance(null, nodes[u - 1], v))
-            distCache << [ (key) : dist]
-        }
-        dist
-    }
-
-    int calc(int[] arr, Node[] nodes) {
-        int sum = 0
-        if (arr.length >= 2) {
-
-            def pairs = getPairs(arr)
-            def results = []
-            pairs.each { int[] pair ->
-                results << calculate(nodes, pair)
+        Q << 1
+        inx[1] = 1
+        vis[1] = 1
+        while (Q) {
+            int u = Q.poll()
+            S << u
+            int s = 0
+            for (Integer it : adj[u]) {
+                if (!vis[it]) {
+                    vis[it] = 1
+                    inx[it] = s + inx[u] + 1;
+                    s += sz[it];
+                    Q << it
+                }
             }
-            sum = results.sum() % MOD_VALUE
         }
-        sum
+
+        while (S) {
+            int u = S.pop()
+            vis[u] = 0
+            out[u] = inx[u]
+            for (Integer it : adj[u]) {
+                if (!vis[it]) {
+                    out[u] = Math.max(out[u], out[it])
+                }
+            }
+        }
+    }
+
+    def constructLCA(int n) {
+        lg = Math.ceil(log2(n));
+        dfs();
+        for (int i = 1; i <= lg; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (LCA[j][i - 1]) {
+                    LCA[j][i] = LCA[LCA[j][i - 1]][i - 1]
+                }
+            }
+        }
+    }
+
+    def swap(int x, int y) {
+        x += (y - (y = x))
+    }
+
+    int getLca(int x, int y) {
+        if (L[x] < L[y])
+            swap(x, y);
+        for (int i = lg; i >= 0; i--) {
+            if (LCA[x][i] != 0 && L[LCA[x][i]] >= L[y])
+                x = LCA[x][i];
+        }
+        if (x == y)
+            return x
+        for (int i = lg; i >= 0; i--) {
+            if (LCA[x][i] != 0 && LCA[x][i] != LCA[y][i])
+                x = LCA[x][i]
+            y = LCA[y][i]
+        }
+        return LCA[x][0]
+    }
+
+    boolean anc(int p, int u) {
+        return inx[p] <= inx[u] && out[p] >= out[u];
+    }
+
+    def solve(int u) {
+        long ans = 0
+        Queue<Integer> Q = [] as Queue
+        Q << u
+        vis[u] = 1
+        lev[u] = 0
+        Stack<Integer> S = [] as Stack
+        while (Q) {
+            u = Q.poll
+            S << u
+            for (Tuple2<Integer, Integer> it : g[u]) {
+                if (!vis[it.ft]) {
+                    vis[it.ft] = 1;
+                    lev[it.ft] = lev[u] + it.sd;
+                    Q.push(it.ft);
+                }
+            }
+        }
+
+        while (!S.empty()) {
+            u = S.top(); S.pop();
+            vis[u] = 0;
+            dp[0][u] = check[u] ? u : 0;
+            dp[1][u] = check[u] ? 1L * lev[u] * u : 0
+            dp[1][u] %= MOD_VALUE
+            long s = 0
+            for (Tuple2<Integer, Integer> it : g[u]) {
+                if (!vis[it.first]) {
+                    s += dp[0][it.first];
+                    if (s >= MOD_VALUE) s -= MOD_VALUE;
+                    dp[0][u] += dp[0][it.first]
+                    if (dp[0][u] >= MOD_VALUE) dp[0][u] -= MOD_VALUE
+                    dp[1][u] += dp[1][it.first]
+                    if (dp[1][u] >= MOD_VALUE) dp[1][u] -= MOD_VALUE;
+                }
+            }
+            // ok
+            for (Tuple2<Integer, Integer> it : g[u]) {
+                if (!vis[it.ft]) {
+                    ans += 1L * (dp[1][it.first] - 1L * dp[0][it.first] * lev[u] % MOD_VALUE) * (s - dp[0][it.first]) % MOD_VALUE
+                    if (ans >= MOD_VALUE) ans -= MOD_VALUE
+                    if (ans < 0) ans += MOD_VALUE;
+                }
+            }
+            if (check[u]) ans += 1L * (dp[1][u] - 1L * lev[u] * dp[0][u] % MOD_VALUE) * u % MOD_VALUE;
+            if (ans >= MOD_VALUE) ans -= MOD_VALUE;
+            if (ans < 0) ans += MOD_VALUE
+        }
+        ans
     }
 
     @Override
@@ -145,15 +229,56 @@ class KittysCalculations implements HackerRankExecutable {
         new Scanner(System.in).withCloseable { sc ->
             int n = sc.nextInt();
             int q = sc.nextInt();
-            Node[] nodes = read(sc, n)
-            (1..q).each {
-                def a = []
-                int k = sc.nextInt()
-                (1..k).each {
-                    a << sc.nextInt()
-                }
-                println(calc(a as int[], nodes))
+            for (int i = 1; i < n - 1; i++) {
+                int u = sc.nextInt()
+                int v = sc.nextInt()
+                adj[u] << v
+                adj[v] << u
             }
+            constructLCA(n)
+
+            int cnt = 0;
+            while (q--) {
+                int k = sc.nextInt()
+                List<Tuple2<Integer, Integer>> Q = [] as List
+                Set<Integer> K = [] as Set
+                for (int i = 1; i <= k; i++) {
+                    int x = sc.nextInt()
+                    check[x] = true
+                    if (!K.find { it == x }) {
+                        K << x
+                        Q << (new Tuple2<Integer, Integer>(inx[x], x));
+                    }
+                }
+                k = Q.size();
+                Q.sort();
+                for (int i = 0; i <= k - 2; i++) {
+                    int lca = getLca(Q[i].first, Q[i + 1].second)
+                    if (!K.find { it == lca }) {
+                        K << lca
+                        Q << (new Tuple2<Integer, Integer>(inx[lca], lca));
+                    }
+                }
+                Q.sort()
+                Stack<Integer> s = [] as Stack
+                s << Q[0].second
+                for (int i = 1; i < Q.size(); i++) {
+                    while (!anc(s.peek(), Q[i].second)) {
+                        s.pop()
+                    }
+                    g[s.peek()] << [Q[i].second, L[Q[i].second] - L[s.peek()]] as Tuple2
+                    g[Q[i].second] << [s.peek(), L[Q[i].second] - L[s.peek()]] as Tuple2
+                    s << Q[i].second
+                }
+                long ans = solve(Q[0].second)
+                println ans
+                for (Tuple2<Integer, Integer> it : Q) {
+                    g[it.second].clear()
+                    dp[0][it.second] = dp[1][it.second] = lev[it.second] = check[it.second] = 0
+                }
+
+            }
+
         }
     }
 }

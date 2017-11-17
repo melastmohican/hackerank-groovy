@@ -4,6 +4,7 @@ import org.example.hackerrank.HackerRankTest
 import spock.lang.Ignore
 
 class KittysCalculationsTest extends HackerRankTest {
+    @Ignore
     def "test execute"() {
         given:
         initStreams "7 3\n" +
