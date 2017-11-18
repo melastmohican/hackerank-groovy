@@ -62,4 +62,15 @@ class KittysCalculationsTest extends HackerRankTest {
         then:
         checkFileResult "kittyscalculations/output03.txt"
     }
+
+    def "test execute-input04"() {
+        given:
+        initFileStreams "kittyscalculations/input04.txt"
+        exec = new KittysCalculations()
+
+        when:
+        exec.execute()
+        then:
+        checkFileResult "kittyscalculations/output04.txt"
+    }
 }
