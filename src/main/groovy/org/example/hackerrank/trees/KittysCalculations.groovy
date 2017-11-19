@@ -221,6 +221,10 @@ class KittysCalculations implements HackerRankExecutable {
         ans
     }
 
+    public execute(Scanner sc) {
+
+    }
+
     @Override
     def execute() {
         new Scanner(System.in).withCloseable { sc ->
